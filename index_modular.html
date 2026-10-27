@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Civilprep.ai — MPSC &amp; UPSC AI Mock Interview Simulator</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-emerald-600 selection:text-white">
+
+  <!-- Sticky Top Navbar -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+      <!-- Brand -->
+      <button type="button" id="brand-home-btn" class="flex items-center gap-3 text-left group focus:outline-none">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-indigo-700 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl font-extrabold tracking-tight text-slate-900">Civilprep</span>
+            <span class="text-xl font-extrabold text-emerald-600">.ai</span>
+            <span class="hidden sm:inline-block ml-1.5 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+              MPSC • UPSC
+            </span>
+          </div>
+          <p id="nav-subtitle" class="text-xs text-slate-500 hidden sm:block">MPSC आणि UPSC मॉक मुलाखत प्लॅटफॉर्म</p>
+        </div>
+      </button>
+
+      <!-- Navigation Pills -->
+      <nav class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+        <button type="button" id="nav-btn-landing" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-emerald-700 shadow-sm">
+          मुख्यपृष्ठ
+        </button>
+        <button type="button" id="nav-btn-interview" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+          मॉक मुलाखत
+        </button>
+        <button type="button" id="nav-btn-report" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+          मूल्यांकन अहवाल
+        </button>
+      </nav>
+
+      <!-- Right Actions: Trial/Pricing + Login (Mobile/Email) + Language Toggle -->
+      <div class="flex items-center gap-2">
+        <span id="trial-badge-label" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
+          ✨ मोफत सराव (Free Access)
+        </span>
+
+        <button type="button" id="open-leads-btn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs sm:text-sm font-bold transition-all shadow-sm">
+          <span>📋</span>
+          <span id="nav-leads-label">Leads (0)</span>
+        </button>
+
+        <button type="button" id="open-login-btn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition-all shadow-sm">
+          <span>👤</span>
+          <span id="nav-login-label">लॉगिन / Register</span>
+        </button>
+
+        <button type="button" id="lang-toggle-btn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs sm:text-sm font-bold transition-all shadow-sm">
+          <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+          <span id="lang-toggle-label">मराठी ✓ | EN</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dynamic View Container -->
+  <main class="flex-1">
+    <!-- ==================== VIEW 1: LANDING PAGE ==================== -->
+    <div id="view-landing" class="hidden">
+      <!-- Hero Section -->
+      <section class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950 text-white py-12 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <!-- Hero Left Column -->
+            <div class="lg:col-span-7 space-y-6">
+              <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-xs sm:text-sm font-semibold">
+                <span>✨</span>
+                <span id="hero-badge">महाराष्ट्र लोकसेवा आयोग (MPSC) व UPSC CSE २०२६ विशेष</span>
+              </div>
+
+              <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                <span id="hero-title-1">सनदी सेवेतील यशासाठी</span>
+                <span id="hero-title-highlight" class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300"> AI-आधारित मॉक मुलाखत </span>
+                <span id="hero-title-2">आणि सखोल मूल्यांकन</span>
+              </h1>
+
+              <p id="hero-desc" class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+                वास्तविक मुलाखत पॅनेलचा अनुभव घ्या. तुमच्या DAF, गृहजिल्हा आणि चालू घडामोडींवर आधारित सानुकूल प्रश्न, मराठी व इंग्रजी भाषेत सराव आणि त्वरित गुणपत्रिका.
+              </p>
+
+              <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 text-xs sm:text-sm text-slate-300 space-y-1">
+                <p id="hero-box-title" class="font-bold text-emerald-300">
+                  🎯 द्विभाषिक सुविधा (Marathi &amp; English Bilingual Simulator):
+                </p>
+                <p id="hero-box-sub">
+                  महाराष्ट्रातील जिल्हा प्रशासन, कृषी अर्थकारण, संविधान आणि चालू घडामोडींवर आधारित प्रत्यक्ष मुलाखतीचा सराव.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-4 pt-2">
+                <button type="button" id="hero-start-btn" class="inline-flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base shadow-lg shadow-emerald-600/25 transition-all transform hover:-translate-y-0.5">
+                  <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  <span id="hero-start-label">Start Mock Interview / मुलाखत सुरू करा</span>
+                </button>
+
+                <button type="button" id="hero-report-btn" class="inline-flex items-center gap-2 px-5 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm transition-all">
+                  <span id="hero-report-label">नमुना मूल्यांकन अहवाल पहा</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Hero Right Column: DAF Profile Card -->
+            <div class="lg:col-span-5">
+              <div class="bg-white text-slate-900 rounded-2xl p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <div>
+                    <h2 id="daf-card-title" class="font-bold text-base text-slate-900">तुमची मुलाखत प्रोफाईल निवडा (DAF Setup)</h2>
+                    <p id="daf-card-sub" class="text-xs text-slate-500">तुमच्या प्रोफाईलनुसार पॅनेल प्रश्न सानुकूल करा</p>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    AI Panel
+                  </span>
+                </div>
+
+                <!-- Target Exam Selection -->
+                <div class="space-y-2">
+                  <label id="exam-select-label" for="exam-select" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    परीक्षा निवडा (Target Exam)
+                  </label>
+                  <select id="exam-select" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="MPSC Rajyaseva (राज्यसेवा गट-अ/ब)">MPSC Rajyaseva (राज्यसेवा गट-अ व गट-ब)</option>
+                    <option value="UPSC Civil Services (IAS/IPS)">UPSC Civil Services (IAS / IPS / IFS)</option>
+                    <option value="MPSC Combined (PSI/STI/ASO)">MPSC Combined / तांत्रिक सेवा मुलाखत</option>
+                  </select>
+                </div>
+
+                <!-- District Selection -->
+                <div class="space-y-2">
+                  <label id="district-select-label" for="district-select" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    गृहजिल्हा (Maharashtra Home District)
+                  </label>
+                  <select id="district-select" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="Kolhapur (कोल्हापूर)">Kolhapur (कोल्हापूर)</option>
+                    <option value="Pune (पुणे)">Pune (पुणे)</option>
+                    <option value="Mumbai (मुंबई)">Mumbai (मुंबई)</option>
+                    <option value="Nagpur (नागपूर)">Nagpur (नागपूर)</option>
+                    <option value="Nashik (नाशिक)">Nashik (नाशिक)</option>
+                    <option value="Chhatrapati Sambhajinagar (छत्रपती संभाजीनगर)">Chhatrapati Sambhajinagar (छत्रपती संभाजीनगर)</option>
+                    <option value="Satara (सातारा)">Satara (सातारा)</option>
+                    <option value="Solapur (सोलापूर)">Solapur (सोलापूर)</option>
+                  </select>
+                </div>
+
+                <button type="button" id="card-launch-btn" class="w-full py-3.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md transition-all">
+                  <span id="card-launch-label">निवडलेल्या प्रोफाईलसह मुलाखत सुरू करा →</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 Feature Cards Section -->
+      <section class="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-10 space-y-2">
+          <span id="features-pill" class="text-xs font-bold uppercase tracking-widest text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+            तीन मुख्य टप्पे
+          </span>
+          <h2 id="features-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+            Civilprep.ai ची प्रमुख वैशिष्ट्ये
+          </h2>
+          <p id="features-sub" class="text-slate-600 text-sm sm:text-base">
+            आधुनिक तंत्रज्ञान आणि अनुभवी प्रशासकीय निकषांचा संगम
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Feature 1 -->
+          <div class="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center font-bold text-xl">
+                🧭
+              </div>
+              <h3 id="f1-title" class="text-lg font-bold text-slate-900">Adaptive Questions (सानुकूल प्रश्न)</h3>
+              <p id="f1-desc" class="text-sm text-slate-600 leading-relaxed">
+                तुमचा गृहजिल्हा, पदवी विषय, आणि महाराष्ट्रातील चालू घडामोडींवर आधारित डायनॅमिक प्रश्नमालिका.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700">
+              <span id="f1-foot">DAF + महाराष्ट्र शासन संदर्भ</span>
+              <span>✓</span>
+            </div>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-bold text-xl">
+                🎙️
+              </div>
+              <h3 id="f2-title" class="text-lg font-bold text-slate-900">AI Mock Interview (AI मुलाखत)</h3>
+              <p id="f2-desc" class="text-sm text-slate-600 leading-relaxed">
+                ३-सदस्यीय मुलाखत पॅनेलचे सिम्युलेशन, आवाज रेकॉर्डिंग (Voice) आणि मजकूर (Text) या दोन्ही पद्धतींनी उत्तर देण्याची सोय.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-700">
+              <span id="f2-foot">आवाज व मजकूर मोड उपलब्ध</span>
+              <span>✓</span>
+            </div>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center font-bold text-xl">
+                📊
+              </div>
+              <h3 id="f3-title" class="text-lg font-bold text-slate-900">In-depth Feedback Report (सखोल फीडबॅक)</h3>
+              <p id="f3-desc" class="text-sm text-slate-600 leading-relaxed">
+                विषय ज्ञान, संवाद कौशल्य आणि विश्लेषणात्मक स्पष्टता या ३ निकषांवर सविस्तर गुण आणि आदर्श उत्तरे.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700">
+              <span id="f3-foot">त्वरित गुण व आदर्श उत्तरे</span>
+              <span>✓</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== VIEW 2: INTERVIEW PAGE ==================== -->
+    <div id="view-interview" class="hidden max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <!-- Progress Header Card -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <span id="int-exam-badge" class="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs">
+              MPSC Rajyaseva
+            </span>
+            <span id="int-district-badge" class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">
+              📍 Kolhapur (कोल्हापूर)
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span id="int-timer-badge" class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl">
+              ⏱ 00:00
+            </span>
+            <span id="int-progress-text" class="text-xs sm:text-sm font-bold text-indigo-700">
+              प्रश्न १ / १० (10%)
+            </span>
+          </div>
+        </div>
+
+        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+          <div id="int-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-indigo-600 transition-all duration-500 rounded-full" style="width: 25%"></div>
+        </div>
+      </div>
+
+      <!-- Board Question Card -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden">
+        <!-- Board Member Top Bar -->
+        <div class="bg-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 font-bold">
+              👤
+            </div>
+            <div>
+              <div id="q-member-name" class="text-sm font-bold text-white">श्री. देशमुख सर</div>
+              <div id="q-member-role" class="text-xs text-emerald-300">अध्यक्ष (निवृत्त सनदी अधिकारी)</div>
+            </div>
+          </div>
+
+          <span id="q-category-badge" class="px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-200 text-xs font-semibold">
+            DAF आणि जिल्हा प्रशासन
+          </span>
+        </div>
+
+        <!-- Question & Response Area -->
+        <div class="p-6 space-y-5">
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+            <div class="flex items-start justify-between gap-3">
+              <p id="q-primary-text" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed flex-1"></p>
+              <button type="button" id="tts-speak-btn" class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-sm transition-all">
+                <span>🔊</span>
+                <span id="tts-speak-label">प्रश्न ऐका (Listen)</span>
+              </button>
+            </div>
+            <p id="q-secondary-text" class="text-xs sm:text-sm text-slate-600 border-t border-slate-200 pt-2.5 italic"></p>
+          </div>
+
+          <!-- Hint Drawer Toggle -->
+          <div>
+            <button type="button" id="toggle-hint-btn" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800">
+              <span>💡</span>
+              <span id="toggle-hint-label">पॅनेलची अपेक्षा / उत्तरातील मुख्य मुद्दे पहा</span>
+            </button>
+            <div id="hint-box" class="hidden mt-2.5 p-4 rounded-xl bg-indigo-50 border border-indigo-200 text-xs sm:text-sm text-indigo-950 font-medium"></div>
+          </div>
+
+          <!-- Input Mode Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+            <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+              <button type="button" id="mode-text-btn" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-emerald-700 shadow-sm transition-all">
+                ✍️ मजकूर उत्तर (Text)
+              </button>
+              <button type="button" id="mode-audio-btn" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all">
+                🎙️ आवाज उत्तर (Voice)
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="button" id="fill-sample-btn" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold transition-colors">
+                ✨ नमुना उत्तर भरा (Insert Sample Answer)
+              </button>
+              <button type="button" id="clear-answer-btn" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">
+                पुसा (Clear)
+              </button>
+            </div>
+          </div>
+
+          <!-- Unified Live Audio + Voice-to-Text Box (Works simultaneously with Typing) -->
+          <div id="voice-simulator-box" class="rounded-2xl border border-indigo-200 bg-indigo-50/70 p-4 space-y-3">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div id="mic-indicator" class="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-lg shrink-0">
+                  🎙️
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <p id="voice-status-title" class="text-sm font-bold text-slate-900">प्रत्यक्ष आवाज + टायपिंग दोन्ही एकत्र उपलब्ध (Live Voice + Typing)</p>
+                    <span id="live-mic-badge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      मराठी / EN Mic Ready
+                    </span>
+                  </div>
+                  <p id="voice-status-sub" class="text-xs text-slate-600">माईक सुरू करून मराठी/इंग्रजीत बोला (आपोआप टाईप होईल व आवाजही रेकॉर्ड होईल) किंवा खालील बॉक्समध्ये थेट टाईप करा.</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button type="button" id="record-toggle-btn" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shrink-0 shadow-sm">
+                  माईक सुरू करा (Start Speaking)
+                </button>
+              </div>
+            </div>
+
+            <!-- Recorded Audio Player Bar -->
+            <div id="recorded-audio-bar" class="hidden pt-2 border-t border-indigo-200/80 flex flex-wrap items-center justify-between gap-3">
+              <span id="recorded-audio-label" class="text-xs font-bold text-indigo-900">🎧 तुमचे रेकॉर्ड केलेले आवाजातील उत्तर (Recorded Voice Answer):</span>
+              <audio id="recorded-audio-player" controls class="h-8 max-w-full"></audio>
+            </div>
+          </div>
+
+          <!-- Answer Textarea -->
+          <div class="space-y-2">
+            <textarea id="answer-textarea" rows="5" placeholder="तुमचे उत्तर येथे सविस्तर लिहा (मराठी किंवा इंग्रजीमध्ये)..." class="w-full rounded-2xl border border-slate-300 bg-white p-4 text-sm sm:text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 leading-relaxed"></textarea>
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span>शब्द संख्या (Words): <strong id="word-count-num" class="text-slate-800">0</strong></span>
+              <span id="answer-tip-text">टीप: तुम्ही स्वतःचे उत्तर लिहू शकता किंवा 'नमुना उत्तर भरा' वापरू शकता.</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200">
+            <button type="button" id="prev-q-btn" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold">
+              ← मागील प्रश्न
+            </button>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <button type="button" id="next-q-btn" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-sm transition-all">
+                <span id="next-q-label">पुढील प्रश्न (Next Question) →</span>
+              </button>
+
+              <button type="button" id="finish-int-btn" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow-sm transition-all">
+                <span id="finish-int-label">✓ मुलाखत पूर्ण करा (Finish Interview)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completed Q&A Transcript -->
+      <div id="transcript-container" class="hidden bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <h3 id="transcript-heading" class="text-xs font-bold uppercase tracking-wider text-slate-500">
+          आतापर्यंत झालेला संवाद (Completed Board Transcript)
+        </h3>
+        <div id="transcript-list" class="space-y-3"></div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 3: ASSESSMENT REPORT PAGE ==================== -->
+    <div id="view-report" class="hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <!-- Top Score Banner -->
+      <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-800">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 space-y-4">
+            <span id="rep-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold">
+              🏆 अधिकृत AI मूल्यांकन अहवाल
+            </span>
+            <h1 id="rep-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              मुलाखत कामगिरी आणि सखोल विश्लेषण
+            </h1>
+            <p id="rep-meta" class="text-xs sm:text-sm text-slate-300"></p>
+
+            <div class="grid grid-cols-2 gap-4 pt-2">
+              <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4">
+                <span id="rep-mpsc-label" class="text-xs text-slate-400 block">MPSC राज्यसेवा समतुल्य (१०० पैकी)</span>
+                <span id="rep-mpsc-val" class="text-2xl font-extrabold text-emerald-400">82 / 100</span>
+              </div>
+              <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4">
+                <span id="rep-upsc-label" class="text-xs text-slate-400 block">UPSC CSE समतुल्य (२०० पैकी)</span>
+                <span id="rep-upsc-val" class="text-2xl font-extrabold text-indigo-300">164 / 200</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Radial Gauge -->
+          <div class="lg:col-span-5 flex flex-col items-center justify-center bg-slate-800/60 border border-slate-700/80 rounded-2xl p-6">
+            <div class="w-36 h-36 rounded-full border-8 border-emerald-500/40 flex items-center justify-center bg-slate-900 shadow-inner">
+              <div class="text-center">
+                <span id="rep-overall-val" class="text-4xl font-extrabold text-emerald-400">82%</span>
+                <span id="rep-grade-tag" class="block text-[11px] uppercase tracking-wider text-slate-400 mt-1">
+                  Selection Grade
+                </span>
+              </div>
+            </div>
+            <p id="rep-overall-label" class="text-xs font-bold text-slate-300 mt-4">एकूण गुण (Overall Readiness Score)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Category Score Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Content Knowledge -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">📘</span>
+            <span id="score-content-val" class="text-xl font-extrabold text-emerald-700">82%</span>
+          </div>
+          <h2 id="cat1-title" class="font-bold text-base text-slate-900">विषय ज्ञान आणि अचूकता (Content Knowledge)</h2>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div id="bar-content" class="h-full bg-emerald-600 rounded-full" style="width: 82%"></div>
+          </div>
+          <p id="cat1-desc" class="text-xs sm:text-sm text-slate-600 leading-relaxed"></p>
+        </div>
+
+        <!-- Communication -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">💬</span>
+            <span id="score-comm-val" class="text-xl font-extrabold text-indigo-700">85%</span>
+          </div>
+          <h2 id="cat2-title" class="font-bold text-base text-slate-900">संवाद कौशल्य आणि प्रशासकीय भाषा (Communication)</h2>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div id="bar-comm" class="h-full bg-indigo-600 rounded-full" style="width: 85%"></div>
+          </div>
+          <p id="cat2-desc" class="text-xs sm:text-sm text-slate-600 leading-relaxed"></p>
+        </div>
+
+        <!-- Analytical Clarity -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">⚖️</span>
+            <span id="score-clarity-val" class="text-xl font-extrabold text-teal-700">80%</span>
+          </div>
+          <h2 id="cat3-title" class="font-bold text-base text-slate-900">विश्लेषणात्मक स्पष्टता आणि समतोल (Analytical Clarity)</h2>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div id="bar-clarity" class="h-full bg-teal-600 rounded-full" style="width: 80%"></div>
+          </div>
+          <p id="cat3-desc" class="text-xs sm:text-sm text-slate-600 leading-relaxed"></p>
+        </div>
+      </div>
+
+      <!-- Strengths & Improvements Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl p-6 border border-emerald-200 shadow-sm space-y-4">
+          <h3 id="strengths-heading" class="text-base font-bold text-emerald-900">✅ तुमच्या जमेच्या बाजू (Key Strengths)</h3>
+          <ul id="strengths-list" class="space-y-3 text-xs sm:text-sm text-slate-700"></ul>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-indigo-200 shadow-sm space-y-4">
+          <h3 id="improvements-heading" class="text-base font-bold text-indigo-900">💡 सुधारणेसाठी कृतीशील शिफारसी (Actionable Improvements)</h3>
+          <ul id="improvements-list" class="space-y-3 text-xs sm:text-sm text-slate-700"></ul>
+        </div>
+      </div>
+
+      <!-- Question-by-Question Review List -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <h3 id="q-review-heading" class="text-lg font-bold text-slate-900">प्रश्ननिहाय विश्लेषण आणि आदर्श उत्तरे</h3>
+        <div id="q-review-container" class="space-y-4"></div>
+      </div>
+
+      <!-- Bottom Action Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center gap-3">
+          <button type="button" id="retake-btn" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-sm transition-all">
+            🔄 पुन्हा मुलाखत द्या (Retake Interview)
+          </button>
+          <button type="button" id="copy-report-btn" class="px-5 py-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold text-xs sm:text-sm transition-all">
+            📋 अहवाल कॉपी करा (Copy Summary)
+          </button>
+        </div>
+
+        <button type="button" id="back-home-btn" class="px-4 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 font-bold text-xs sm:text-sm">
+          मुख्यपृष्ठावर जा (Back to Home) →
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== STUDENT REGISTRATION BANNER (NO PRICING / FREE ACCESS) ==================== -->
+  <section id="saas-pricing-section" class="hidden py-12 bg-slate-100/80 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="space-y-1">
+          <span id="biz-pill" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+            🎓 MPSC व UPSC विद्यार्थ्यांसाठी मोफत मॉक मुलाखत सराव
+          </span>
+          <h3 id="biz-heading" class="text-xl font-extrabold text-slate-900 pt-1">
+            तुमचा मोबाईल नंबर किंवा ईमेल वापरून प्रोफाईल सेव्ह करा आणि पूर्ण १० प्रश्नांची मुलाखत द्या!
+          </h3>
+          <p id="biz-sub" class="text-xs sm:text-sm text-slate-600">
+            प्रत्यक्ष MPSC/UPSC पॅनेलप्रमाणे १० सर्वांगीण प्रश्नांची पूर्ण मॉक टेस्ट आणि वैयक्तिक प्रगती अहवाल मिळवण्यासाठी लॉगिन करा.
+          </p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <button type="button" id="landing-login-cta" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-sm">
+            📱 मोबाईल / ईमेल लॉगिन करा (Student Login)
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== USER LOGIN / REGISTER MODAL (MOBILE OTP + EMAIL, NO RATES) ==================== -->
+  <div id="auth-modal" class="fixed inset-0 top-16 z-50 bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+            🎓 Student Account (मोफत नोंदणी)
+          </span>
+          <h3 id="auth-modal-title" class="text-lg font-extrabold text-slate-900 mt-1">
+            विद्यार्थी लॉगिन / नवीन नोंदणी
+          </h3>
+        </div>
+        <button type="button" id="close-auth-modal-btn" class="hidden w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Auth Method Switcher: Mobile OTP vs Email -->
+      <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+        <button type="button" id="auth-tab-mobile" class="py-2 rounded-lg text-xs font-bold bg-white text-emerald-700 shadow-sm transition-all">
+          📱 मोबाईल नंबर (OTP)
+        </button>
+        <button type="button" id="auth-tab-email" class="py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all">
+          ✉️ ईमेल आयडी (Email)
+        </button>
+      </div>
+
+      <!-- Candidate Name -->
+      <div class="space-y-1.5">
+        <label for="auth-name-input" id="auth-name-label" class="block text-xs font-bold text-slate-700">
+          तुमचे पूर्ण नाव (Full Name)
+        </label>
+        <input id="auth-name-input" type="text" placeholder="उदा. राहुल पाटील (Rahul Patil)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+      </div>
+
+      <!-- Mandatory Login Notice -->
+      <div id="login-gate-notice" class="p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-xs font-bold leading-relaxed">
+        🔒 <strong>प्रवेशासाठी प्रथम लॉगिन आवश्यक आहे:</strong> कृपया तुमचे पूर्ण नाव, मोबाईल नंबर आणि ई-मेल आयडी टाकून लॉगिन करा. लॉगिन केल्याशिवाय कोणताही विभाग किंवा मॉक टेस्ट सुरू होणार नाही.
+      </div>
+
+      <!-- Mobile Number + OTP Box -->
+      <div id="auth-mobile-group" class="space-y-3">
+        <div class="space-y-1.5">
+          <label for="auth-mobile-input" id="auth-mobile-label" class="block text-xs font-bold text-slate-700">
+            मोबाईल नंबर (Mobile Number) *
+          </label>
+          <div class="flex gap-2">
+            <span class="px-3 py-2.5 rounded-xl bg-slate-100 border border-slate-300 text-sm font-bold text-slate-700">+91</span>
+            <input id="auth-mobile-input" type="tel" maxlength="10" placeholder="9876543210" class="flex-1 rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            <button type="button" id="send-otp-btn" class="px-3.5 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold shrink-0">
+              OTP पाठवा
+            </button>
+          </div>
+        </div>
+
+        <div id="otp-input-row" class="hidden space-y-1.5">
+          <label for="auth-otp-input" class="block text-xs font-bold text-emerald-700">
+            ४-अंकी OTP टाका (डेमो OTP: 1234)
+          </label>
+          <input id="auth-otp-input" type="text" maxlength="6" value="1234" class="w-full rounded-xl border border-emerald-400 bg-emerald-50/40 px-3.5 py-2 text-sm font-bold tracking-widest text-slate-900" />
+        </div>
+      </div>
+
+      <!-- Email Box (Always visible or accessible so both Mobile & Email are captured for assuretech@gmail.com) -->
+      <div id="auth-email-group" class="space-y-3">
+        <div class="space-y-1.5">
+          <label for="auth-email-input" id="auth-email-label" class="block text-xs font-bold text-slate-700">
+            विद्यार्थ्याचा ईमेल पत्ता (Student Email ID) *
+          </label>
+          <input id="auth-email-input" type="email" placeholder="student@gmail.com" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        </div>
+        <div class="hidden">
+          <input id="auth-pass-input" type="password" value="civilprep" />
+        </div>
+      </div>
+
+      <div id="auth-feedback-msg" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold"></div>
+
+      <button type="button" id="submit-auth-btn" class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all">
+        ✓ लॉगिन करा (Login &amp; Save Profile)
+      </button>
+
+      <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+        <span>✓ १० प्रश्नांची पूर्ण मॉक मुलाखत • ✓ सखोल अहवाल</span>
+        <button type="button" id="logout-demo-btn" class="hidden text-red-600 font-bold hover:underline">
+          लॉगआउट करा (Logout)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STUDENT LEADS & EMAIL STATUS MODAL ==================== -->
+  <div id="leads-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900">
+            📊 Admin Lead Manager • assuretech@gmail.com
+          </span>
+          <h3 class="text-lg font-extrabold text-slate-900 mt-1">
+            नोंदणी केलेले विद्यार्थी (Student Leads &amp; Email Status)
+          </h3>
+        </div>
+        <button type="button" id="close-leads-modal-btn" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Why Email Might Not Arrive in Canvas / Activation Box -->
+      <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 space-y-2 leading-relaxed">
+        <p class="font-bold text-sm text-amber-900">⚠️ महत्त्वाचे: ई-मेल (assuretech@gmail.com) का येत नाही आणि कसा सुरू करावा?</p>
+        <p>१) <strong>Gemini Canvas मर्यादा:</strong> बाजूच्या प्रिव्ह्यू विंडोमध्ये (Sandbox) किंवा कॉम्प्युटरवरील ऑफलाईन फाईलमध्ये (`file:///`) ब्राउझर थेट बाहेरील ई-मेल सर्व्हर ब्लॉक करतो. ऑटोमॅटिक ई-मेल येण्यासाठी झिपमधील <strong>`START_SERVER.bat`</strong> (किंवा `python app.py` / Netlify सर्व्हर) वरून साईट चालवा.</p>
+        <p>२) <strong>प्रथम एकदाच ई-मेल अ‍ॅक्टिव्हेशन आवश्यक:</strong> खालील <strong>"🔑 assuretech@gmail.com अ‍ॅक्टिव्हेट करा"</strong> बटणावर क्लिक करा आणि तुमच्या Gmail च्या <strong>Inbox किंवा Spam</strong> फोल्डरमध्ये आलेल्या FormSubmit ई-मेलमधील <strong>"Activate Form"</strong> वर क्लिक करा.</p>
+        <div class="flex flex-wrap items-center gap-2 pt-1">
+          <form action="https://formsubmit.co/assuretech@gmail.com" method="POST" target="_blank" class="inline">
+            <input type="hidden" name="_subject" value="Civilprep.ai Email Activation & Test Lead" />
+            <input type="hidden" name="_cc" value="vilas82546@gmail.com" />
+            <input type="hidden" name="Platform" value="Civilprep.ai MPSC & UPSC Simulator" />
+            <input type="hidden" name="Status" value="Email Delivery Activated for assuretech@gmail.com" />
+            <button type="submit" id="activate-formsubmit-btn" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm">
+              🔑 assuretech@gmail.com अ‍ॅक्टिव्हेट करा (Activate Email)
+            </button>
+          </form>
+          <button type="button" id="send-gmail-direct-btn" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm">
+            ✉️ आत्ताच Gmail मधून यादी पाठवा
+          </button>
+          <button type="button" id="download-leads-csv-btn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-sm">
+            📥 Excel / CSV डाउनलोड करा
+          </button>
+        </div>
+      </div>
+
+      <div id="email-delivery-log" class="p-3 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700">
+        ई-मेल स्थिती (Last Email Status): अद्याप कोणतीही नोंदणी झालेली नाही.
+      </div>
+
+      <!-- Leads Table -->
+      <div class="max-h-60 overflow-y-auto rounded-xl border border-slate-200">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+            <tr>
+              <th class="p-2.5">विद्यार्थ्याचे नाव</th>
+              <th class="p-2.5">मोबाईल</th>
+              <th class="p-2.5">ई-मेल</th>
+              <th class="p-2.5">परीक्षा / जिल्हा</th>
+              <th class="p-2.5">वेळ</th>
+            </tr>
+          </thead>
+          <tbody id="leads-table-body" class="divide-y divide-slate-100 text-slate-800">
+            <tr>
+              <td colspan="5" class="p-4 text-center text-slate-400">अद्याप कोणताही विद्यार्थी लॉगिन झालेला नाही.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="font-bold text-slate-800">
+        Civilprep.ai — MPSC &amp; UPSC AI Mock Interview Simulator (Maharashtra)
+      </div>
+      <div id="footer-right">
+        मराठी आणि इंग्रजी द्विभाषिक सपोर्ट • Next.js 14 + TypeScript + Tailwind CSS
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
